@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Usage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Edu+VIC+WA+NT+Beginner&family=Roboto+Mono:wght@200;600&display=swap" rel="stylesheet">
+    <style>
+        body{
+            background-color: rgba(0,0,0,0.75);
+            color:white;
+            font-family: 'Edu VIC WA NT Beginner', cursive;
+            font-size: 20px;
+        }
+        *{
+            padding: 5px;
+            margin:5px;
+            text-align: center;
+        }
+        input[type="submit"]{
+            color:white;
+            background-color: rgba(6, 132, 35,0.75);
+            border: none;
+            padding: 5px;
+            border: 1px solid white;
+            border-radius: 3px;
+            margin-top: 5px;
+            text-align: center;
+            font-size: 15px;
+            font-family: 'Edu VIC WA NT Beginner', cursive;
+        }
+        label{
+            display: block;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        input{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .form{
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+   <div  class="form">
+   <label for="inputText">Enter Text: </label>
+   <input type="text" name="inputText" id="ipText" placeholder="Enter Text to be translated">
+   </div>
+   <input type="submit" value="Convert" id="submit">
+    <script>
+        const submitButton = document.getElementById("submit");
+        // const ipText = document.getElementById("ipText").value;
+
+        submitButton.addEventListener("click", e =>{
+            const ipText = document.getElementById("ipText").value;
+            let url = "https://api.mymemory.translated.net/get?q=".concat(ipText,"&langpair=en|it");
+            // fetch(url).then(response => response.json()).then(data => console.log(data.responseData.translatedText));
+            const promise = new Promise((resolve,reject) =>{
+                fetch(url).then(response =>{
+                    if(response.ok){
+                        resolve(response.json());
+                    }
+                    else{
+                        reject(new Error(response));
+                    }
+                }).catch(err =>{
+                    reject(new Error(err));
+                })
+            });
+            const onSuccess = response => {
+                // console.log(response.responseData.translatedText);
+                const element = document.createElement("p");
+                element.innerText = ipText.concat(" => ",response.responseData.translatedText);
+                document.body.appendChild(element);
+            }
+            const onFailure = error =>{
+                console.log(error);
+            }
+            promise.then(onSuccess, onFailure);
+        });
+
+
+        // const myPromise = new Promise((resolve,reject) =>{
+        //     let a = 1;
+        //     setTimeout(()=>{
+        //         if(a === 0){
+        //             resolve("promise fulfilled\n");
+        //         }
+        //         else{
+        //             reject("promise rejected\n");
+        //         }
+        //     },300)
+        // });
+        // myPromise.catch(value => {console.log(value)});
+
+        // const promise = new Promise((resolve,reject) =>{
+        //     fetch('https://api.github.com/users/workatech/repos')
+        //     .then(response => {
+        //         if(!response.ok){
+        //             reject(`HTTP status code: ${response.status}`);
+        //         }
+        //         else{
+        //             resolve(response.json());
+        //         }
+        //     }).catch(error => {
+        //         reject(error);
+        //     });
+        // });
+        // const onSuccess = result => {
+        //     console.log(result);
+        // }
+        // const onFailure = errorrMsg => {
+        //     console.log(errorrMsg);
+        // }
+        // promise.then(onSuccess,onFailure);
+
+    </script>
+</body>
+</html>
